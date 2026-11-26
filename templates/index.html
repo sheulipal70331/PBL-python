@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Event Management & Feedback Analyzer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%236366f1%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%236366f1%22/><text y=%2217%22 x=%226%22 font-size=%2214%22 fill=%22white%22 font-weight=%22bold%22>C</text></svg>">
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Background Ambient Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div class="app-layout">
+        <!-- Top Navigation Bar -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">
+                        CampusPulse
+                        <span class="badge-project">Project 5</span>
+                    </div>
+                    <div class="brand-subtitle">Campus Event Management & Feedback Analyzer</div>
+                </div>
+            </div>
+
+            <!-- Top Actions -->
+            <div class="header-actions">
+                <button id="btn-seed-data" class="btn btn-outline" title="Populate realistic demo campus events and students">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                    </svg>
+                    <span>Load Demo Data</span>
+                </button>
+                <button id="btn-reset-data" class="btn btn-ghost text-danger" title="Clear all data">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    <span>Reset</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs" id="main-nav">
+            <button class="nav-tab active" data-tab="dashboard">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="9"></rect>
+                    <rect x="14" y="3" width="7" height="5"></rect>
+                    <rect x="14" y="12" width="7" height="9"></rect>
+                    <rect x="3" y="16" width="7" height="5"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-tab" data-tab="events">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Events</span>
+                <span class="tab-counter" id="badge-event-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="students">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Students</span>
+                <span class="tab-counter" id="badge-student-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="registrations">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <polyline points="16 11 18 13 22 9"></polyline>
+                </svg>
+                <span>Registrations</span>
+                <span class="tab-counter" id="badge-reg-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="feedback">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>Feedback & Reviews</span>
+                <span class="tab-counter" id="badge-feedback-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="analytics">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Pandas & Matplotlib</span>
+            </button>
+        </nav>
+
+        <!-- Main Workspace -->
+        <main class="content-container">
+
+            <!-- TAB 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-panel active">
+                <!-- Welcome Banner -->
+                <div class="hero-card">
+                    <div class="hero-content">
+                        <h2>University Event Hub & Analytics</h2>
+                        <p>Streamline campus events, enforce seating capacity constraints, track participant registrations, and analyze post-event student feedback in real-time.</p>
+                        <div class="hero-buttons">
+                            <button class="btn btn-primary" onclick="openModal('modal-create-event')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Create Event
+                            </button>
+                            <button class="btn btn-secondary" onclick="openModal('modal-register')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="16" y1="11" x2="22" y2="11"></line></svg>
+                                Register Student
+                            </button>
+                            <button class="btn btn-secondary" onclick="openModal('modal-feedback')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                Submit Feedback
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-status-pill">
+                        <span class="live-dot"></span>
+                        <span>CSV Data Synced</span>
+                    </div>
+                </div>
+
+                <!-- KPI Metric Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card" onclick="switchTab('events')">
+                        <div class="kpi-icon indigo">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Active Events</span>
+                            <span class="kpi-value" id="kpi-events">0</span>
+                        </div>
+                        <div class="kpi-footer">
+                            <span id="kpi-full-events-badge" class="badge badge-subtle">0 Full</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card" onclick="switchTab('students')">
+                        <div class="kpi-icon cyan">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Enrolled Students</span>
+                            <span class="kpi-value" id="kpi-students">0</span>
+                        </div>
+                        <div class="kpi-footer">
+                            <span class="badge badge-subtle">In Directory</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card" onclick="switchTab('registrations')">
+                        <div class="kpi-icon emerald">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Total Registrations</span>
+                            <span class="kpi-value" id="kpi-registrations">0</span>
+                        </div>
+                        <div class="kpi-footer">
+                            <span class="badge badge-emerald">Enforced Capacity</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card" onclick="switchTab('feedback')">
+                        <div class="kpi-icon amber">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </div>
+                        <div class="kpi-details">
+                            <span class="kpi-label">Average Rating</span>
+                            <span class="kpi-value" id="kpi-rating">-- ★</span>
+                        </div>
+                        <div class="kpi-footer">
+                            <span id="kpi-feedback-count" class="badge badge-subtle">0 Reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard 2-column Grid -->
+                <div class="grid-2col">
+                    <!-- Events Spotlight -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Featured Events & Live Capacities</h3>
+                                <p class="panel-subtitle">Current participant fill rates</p>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" onclick="switchTab('events')">View All &rarr;</button>
+                        </div>
+                        <div id="dash-events-list" class="dash-event-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Quick Analytics Overview -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Matplotlib Analytics Snapshot</h3>
+                                <p class="panel-subtitle">Generated automatically via Pandas</p>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" onclick="switchTab('analytics')">Full Charts &rarr;</button>
+                        </div>
+                        <div class="dash-chart-preview" onclick="switchTab('analytics')">
+                            <img id="dash-preview-chart" src="/api/charts/participation" alt="Participation Graph Preview" onerror="this.style.display='none'">
+                            <div class="chart-overlay-hint">
+                                <span>Click to inspect high-resolution Matplotlib graphs & summary tables</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: EVENTS -->
+            <section id="tab-events" class="tab-panel">
+                <div class="section-toolbar">
+                    <div class="toolbar-search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="filter-events" placeholder="Search events by name, ID, or venue...">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-create-event')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Create New Event
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Event Cards Grid -->
+                <div id="events-grid" class="cards-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- TAB 3: STUDENTS -->
+            <section id="tab-students" class="tab-panel">
+                <div class="section-toolbar">
+                    <div class="toolbar-search">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="filter-students" placeholder="Search students by name, ID, or email...">
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-primary" onclick="openModal('modal-add-student')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Student
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Students Table Container -->
+                <div class="panel-card table-panel">
+                    <div class="table-responsive">
+                        <table class="data-table" id="students-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Full Name</th>
+                                    <th>University Email</th>
+                                    <th>Registered Events</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: REGISTRATIONS -->
+            <section id="tab-registrations" class="tab-panel">
+                <!-- Registration Action Bar -->
+                <div class="split-view">
+                    <!-- Quick Register Form Card -->
+                    <div class="panel-card register-box">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Register Student for Event</h3>
+                                <p class="panel-subtitle">Capacity limits and duplicate checks are strictly enforced</p>
+                            </div>
+                        </div>
+                        <form id="form-register-inline" onsubmit="handleRegistrationSubmit(event)">
+                            <div class="form-group">
+                                <label for="reg-select-event">Select Target Event</label>
+                                <select id="reg-select-event" required onchange="updateEventSeatPreview()">
+                                    <option value="">-- Choose an Event --</option>
+                                </select>
+                                <div id="reg-seat-preview" class="seat-preview-text"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-select-student">Select Student</label>
+                                <select id="reg-select-student" required>
+                                    <option value="">-- Choose Student --</option>
+                                </select>
+                            </div>
+                            <button type="submit" id="btn-submit-registration" class="btn btn-primary btn-block">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                                Confirm Registration
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Registrations List Card -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Active Registrations</h3>
+                                <p class="panel-subtitle">Manage or cancel student event entries</p>
+                            </div>
+                            <div class="filter-mini">
+                                <input type="text" id="filter-registrations" placeholder="Filter registrations...">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Event</th>
+                                        <th>Student</th>
+                                        <th>Email</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="registrations-table-body">
+                                    <!-- Loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: FEEDBACK -->
+            <section id="tab-feedback" class="tab-panel">
+                <div class="split-view">
+                    <!-- Submit Feedback Card -->
+                    <div class="panel-card feedback-submit-box">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Submit Post-Event Feedback</h3>
+                                <p class="panel-subtitle">Only students registered for the event may submit feedback</p>
+                            </div>
+                        </div>
+                        <form id="form-feedback" onsubmit="handleFeedbackSubmit(event)">
+                            <div class="form-group">
+                                <label for="fb-select-event">Event Attended</label>
+                                <select id="fb-select-event" required onchange="filterStudentsForFeedback()">
+                                    <option value="">-- Choose Event --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fb-select-student">Registered Student</label>
+                                <select id="fb-select-student" required>
+                                    <option value="">-- Choose Registered Student --</option>
+                                </select>
+                                <small class="form-helper-text" id="fb-student-hint">Only registered attendees are eligible</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Rating (1 to 5 Stars)</label>
+                                <div class="star-rating-picker" id="star-picker">
+                                    <button type="button" class="star-btn" data-value="1">★</button>
+                                    <button type="button" class="star-btn" data-value="2">★</button>
+                                    <button type="button" class="star-btn" data-value="3">★</button>
+                                    <button type="button" class="star-btn" data-value="4">★</button>
+                                    <button type="button" class="star-btn active" data-value="5">★</button>
+                                    <span class="rating-label-display" id="rating-label-display">5 Stars (Excellent)</span>
+                                </div>
+                                <input type="hidden" id="fb-rating-value" value="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="fb-comment">Comments & Remarks (Optional)</label>
+                                <textarea id="fb-comment" rows="3" placeholder="What went well? Any suggestions for improvements?"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-amber btn-block">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                Submit Rating & Feedback
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Feedback Stream Card -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Student Reviews & Feedback Stream</h3>
+                                <p class="panel-subtitle">Real-time ratings collected from participants</p>
+                            </div>
+                            <div class="overall-badge" id="fb-overall-badge">-- Overall</div>
+                        </div>
+                        <div id="feedback-stream" class="feedback-stream">
+                            <!-- Loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: ANALYTICS (PANDAS & MATPLOTLIB) -->
+            <section id="tab-analytics" class="tab-panel">
+                <div class="section-toolbar">
+                    <div>
+                        <h2>Data Science & Statistical Analysis</h2>
+                        <p class="text-muted">Calculations powered by Pandas DataFrames & figures plotted with Matplotlib</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="refreshChartsAndAnalysis()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        Refresh Graphs
+                    </button>
+                </div>
+
+                <!-- Pandas Summary Table -->
+                <div class="panel-card mb-4">
+                    <div class="panel-header">
+                        <div>
+                            <h3 class="panel-title">Pandas Analytical Summary</h3>
+                            <p class="panel-subtitle">Aggregated event participation, capacity fill percentages, and rating metrics</p>
+                        </div>
+                        <span class="badge badge-indigo">pandas.DataFrame.agg()</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="analytics-table">
+                            <thead>
+                                <tr>
+                                    <th>Event ID</th>
+                                    <th>Event Name</th>
+                                    <th>Participants</th>
+                                    <th>Max Capacity</th>
+                                    <th>Fill Rate</th>
+                                    <th>Average Rating</th>
+                                    <th>Feedback Count</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-table-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Matplotlib Charts Section -->
+                <div class="charts-grid">
+                    <!-- Chart 1: Average Rating Bar Chart -->
+                    <div class="panel-card chart-card">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Average Feedback Rating per Event</h3>
+                                <p class="panel-subtitle">Matplotlib Bar Chart (Ratings 1 to 5)</p>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" onclick="downloadChart('avg_rating_bar')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Save PNG
+                            </button>
+                        </div>
+                        <div class="chart-wrapper" onclick="zoomChart('/api/charts/avg_rating_bar', 'Average Feedback Rating per Event')">
+                            <img id="chart-img-rating" src="/api/charts/avg_rating_bar" alt="Average Rating Bar Chart">
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Rating Histogram -->
+                    <div class="panel-card chart-card">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Distribution of Feedback Ratings</h3>
+                                <p class="panel-subtitle">Matplotlib Histogram (Frequency of 1-5 Stars)</p>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" onclick="downloadChart('rating_histogram')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Save PNG
+                            </button>
+                        </div>
+                        <div class="chart-wrapper" onclick="zoomChart('/api/charts/rating_histogram', 'Distribution of Feedback Ratings')">
+                            <img id="chart-img-histogram" src="/api/charts/rating_histogram" alt="Rating Histogram">
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Participation Graph -->
+                    <div class="panel-card chart-card full-width-chart">
+                        <div class="panel-header">
+                            <div>
+                                <h3 class="panel-title">Event Participation vs Seating Capacity</h3>
+                                <p class="panel-subtitle">Matplotlib Comparative Bar Graph</p>
+                            </div>
+                            <button class="btn btn-sm btn-ghost" onclick="downloadChart('participation')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Save PNG
+                            </button>
+                        </div>
+                        <div class="chart-wrapper" onclick="zoomChart('/api/charts/participation', 'Event Participation vs Seating Capacity')">
+                            <img id="chart-img-participation" src="/api/charts/participation" alt="Participation Graph">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Modal: Create Event -->
+    <div class="modal-backdrop" id="modal-create-event">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Create New Campus Event</h3>
+                <button class="modal-close" onclick="closeModal('modal-create-event')">&times;</button>
+            </div>
+            <form id="form-create-event" onsubmit="handleCreateEventSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="create-event-id">Event ID</label>
+                            <input type="text" id="create-event-id" placeholder="e.g. E105" required>
+                            <small class="form-helper-text">Unique identifier</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="create-event-max">Max Participants (Capacity)</label>
+                            <input type="number" id="create-event-max" placeholder="e.g. 30" min="1" required>
+                            <small class="form-helper-text">Seating limit</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-event-name">Event Name</label>
+                        <input type="text" id="create-event-name" placeholder="e.g. Artificial Intelligence Symposium" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="create-event-date">Date</label>
+                            <input type="date" id="create-event-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="create-event-venue">Venue</label>
+                            <input type="text" id="create-event-venue" placeholder="e.g. Main Auditorium" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-create-event')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Event -->
+    <div class="modal-backdrop" id="modal-edit-event">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Edit Event Details</h3>
+                <button class="modal-close" onclick="closeModal('modal-edit-event')">&times;</button>
+            </div>
+            <form id="form-edit-event" onsubmit="handleEditEventSubmit(event)">
+                <input type="hidden" id="edit-event-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Event ID</label>
+                        <input type="text" id="edit-event-id-display" disabled class="input-disabled">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-event-name">Event Name</label>
+                        <input type="text" id="edit-event-name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-event-date">Date</label>
+                            <input type="date" id="edit-event-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-event-venue">Venue</label>
+                            <input type="text" id="edit-event-venue" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-event-max">Max Capacity</label>
+                        <input type="number" id="edit-event-max" min="1" required>
+                        <small class="form-helper-text">Cannot be lower than currently registered students</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-edit-event')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Student -->
+    <div class="modal-backdrop" id="modal-add-student">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Add Student to Directory</h3>
+                <button class="modal-close" onclick="closeModal('modal-add-student')">&times;</button>
+            </div>
+            <form id="form-add-student" onsubmit="handleAddStudentSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="student-id">Student ID</label>
+                        <input type="text" id="student-id" placeholder="e.g. S109" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-name">Full Name</label>
+                        <input type="text" id="student-name" placeholder="e.g. Rahul Verma" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-email">University Email</label>
+                        <input type="email" id="student-email" placeholder="e.g. rahul.verma@university.edu" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-add-student')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Student -->
+    <div class="modal-backdrop" id="modal-edit-student">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Edit Student Details</h3>
+                <button class="modal-close" onclick="closeModal('modal-edit-student')">&times;</button>
+            </div>
+            <form id="form-edit-student" onsubmit="handleEditStudentSubmit(event)">
+                <input type="hidden" id="edit-student-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Student ID</label>
+                        <input type="text" id="edit-student-id-display" disabled class="input-disabled">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-student-name">Full Name</label>
+                        <input type="text" id="edit-student-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-student-email">University Email</label>
+                        <input type="email" id="edit-student-email" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-edit-student')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Register Student Dialog -->
+    <div class="modal-backdrop" id="modal-register">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Register Student for Event</h3>
+                <button class="modal-close" onclick="closeModal('modal-register')">&times;</button>
+            </div>
+            <form id="form-modal-register" onsubmit="handleModalRegisterSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modal-reg-event">Event</label>
+                        <select id="modal-reg-event" required onchange="updateModalSeatPreview()">
+                            <option value="">-- Choose Event --</option>
+                        </select>
+                        <div id="modal-seat-preview" class="seat-preview-text"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-reg-student">Student</label>
+                        <select id="modal-reg-student" required>
+                            <option value="">-- Choose Student --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-register')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Quick Feedback Dialog -->
+    <div class="modal-backdrop" id="modal-feedback">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Collect Event Feedback</h3>
+                <button class="modal-close" onclick="closeModal('modal-feedback')">&times;</button>
+            </div>
+            <form id="form-modal-feedback" onsubmit="handleModalFeedbackSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modal-fb-event">Event</label>
+                        <select id="modal-fb-event" required onchange="filterModalFeedbackStudents()">
+                            <option value="">-- Choose Event --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-fb-student">Registered Student</label>
+                        <select id="modal-fb-student" required>
+                            <option value="">-- Choose Registered Student --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Rating (1 to 5 Stars)</label>
+                        <select id="modal-fb-rating" required>
+                            <option value="5">5 Stars - Outstanding</option>
+                            <option value="4">4 Stars - Very Good</option>
+                            <option value="3">3 Stars - Average</option>
+                            <option value="2">2 Stars - Poor</option>
+                            <option value="1">1 Star - Unsatisfactory</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-fb-comment">Comment</label>
+                        <textarea id="modal-fb-comment" rows="3" placeholder="Feedback thoughts..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('modal-feedback')">Cancel</button>
+                    <button type="submit" class="btn btn-amber">Save Feedback</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: View & Search Registered Students for an Event -->
+    <div class="modal-backdrop" id="modal-view-participants">
+        <div class="modal-box modal-lg">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modal-part-event-name">Registered Participants</h3>
+                    <p class="panel-subtitle" id="modal-part-event-meta"></p>
+                </div>
+                <button class="modal-close" onclick="closeModal('modal-view-participants')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="section-toolbar" style="margin-bottom: 1rem;">
+                    <div class="toolbar-search" style="flex: 1;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="modal-part-search" placeholder="Search registered students by ID, Name, or Email..." oninput="handleParticipantSearch()">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modal-part-list">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('modal-view-participants')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Image Zoom Preview -->
+    <div class="modal-backdrop" id="modal-zoom">
+        <div class="modal-box modal-xl">
+            <div class="modal-header">
+                <h3 id="zoom-title">Chart Preview</h3>
+                <button class="modal-close" onclick="closeModal('modal-zoom')">&times;</button>
+            </div>
+            <div class="modal-body text-center" style="padding: 1rem;">
+                <img id="zoom-img" src="" alt="Zoomed Chart" style="max-width: 100%; border-radius: 8px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Application Script -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
